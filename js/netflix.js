@@ -72,6 +72,12 @@ function update() {
   var sizeField  = getSizeSelectedOption();
   var colorField = getColorSelectedOption();
 
+  // TODO: Create/update scales
+  // xScale     — d3.scaleLinear(), domain from data extent, range [0, width]
+  // yScale     — d3.scaleLinear(), domain from data extent, range [height, 0]
+  // sizeScale  — d3.scaleSqrt(),   domain from data extent, range [2, 18]
+  // colorScale — d3.scaleOrdinal(d3.schemeTableau10), domain of unique category values
+
 
   var xScale = d3.scaleLinear()
     .domain([0, d3.max(xField)])
@@ -81,19 +87,12 @@ function update() {
     .domain([0, d3.max(yField)])
     .range([0, height])
 
-  var sizeScale = d3.scaleSqrt
+  var sizeScale = d3.scaleSqrt()
     .domain([0, d3.max(sizeField)])
     .range([2, 18])
   
   var colorScale = d3.scaleOrdinal(d3.schemeTableau10)
     .domain(colorField.map(function(d) {return d[0];}))
-
-  // TODO: Create/update scales
-  // xScale     — d3.scaleLinear(), domain from data extent, range [0, width]
-  // yScale     — d3.scaleLinear(), domain from data extent, range [height, 0]
-  // sizeScale  — d3.scaleSqrt(),   domain from data extent, range [2, 18]
-  // colorScale — d3.scaleOrdinal(d3.schemeTableau10), domain of unique category values
-
 
 
   // TODO: Update x-axis, y-axis, and axis labels
@@ -114,6 +113,12 @@ function update() {
   //   .attr('fill', ...)
   //   .on('click', showMovie)
 
+  vis.selectAll('circle').data(data).join('circle')
+   .attr('cx', d => xScale(d[xField]))
+   .attr('cy', d => yScale(d[yScale]))
+   .attr('r',  d => sizeScale(d[sizeScale]))
+   .attr('fill', d => colorScale(d[colorField]))
+   .on('click', showMovie)
 
   // TODO: Draw a color legend inside the '.legend' group
   // Use colorScale.domain() to get the category values.
