@@ -72,6 +72,22 @@ function update() {
   var sizeField  = getSizeSelectedOption();
   var colorField = getColorSelectedOption();
 
+
+  var xScale = d3.scaleLinear()
+    .domain([0, d3.max(xField)])
+    .range([0, width])
+
+  var yScale = d3.scaleLinear()
+    .domain([0, d3.max(yField)])
+    .range([0, height])
+
+  var sizeScale = d3.scaleSqrt
+    .domain([0, d3.max(sizeField)])
+    .range([2, 18])
+  
+  var colorScale = d3.scaleOrdinal(d3.schemeTableau10)
+    .domain(colorField.map(function(d) {return d[0];}))
+
   // TODO: Create/update scales
   // xScale     — d3.scaleLinear(), domain from data extent, range [0, width]
   // yScale     — d3.scaleLinear(), domain from data extent, range [height, 0]
@@ -79,10 +95,16 @@ function update() {
   // colorScale — d3.scaleOrdinal(d3.schemeTableau10), domain of unique category values
 
 
+
   // TODO: Update x-axis, y-axis, and axis labels
   // Hint: d3.select('.x-axis').call(d3.axisBottom(xScale))
   //       d3.select('.x-label').text(xField)
 
+  d3.select('.x-axis').call(d3.axisBottom(xScale))
+  d3.select('.x-label').text(xField)
+
+  d3.select('.y-axis').call(d3.axisBottom(yScale))
+  d3.select('.y-label').text(yField)
 
   // TODO: Draw circles — one per movie
   // Use vis.selectAll('circle').data(data).join('circle') then set:
